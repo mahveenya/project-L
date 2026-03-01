@@ -2,10 +2,12 @@ FROM python:3.12-slim
 
 WORKDIR /backend
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
   gcc \
   libpq-dev \
+  netcat-openbsd \
   && rm -rf /var/lib/apt/lists/*
+
 
 COPY . .
 RUN pip install --upgrade pip \
@@ -13,4 +15,4 @@ RUN pip install --upgrade pip \
 
 EXPOSE 8000
 
-CMD ["sh", "-c", "./scripts/wait-for-db.sh db alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"]
+ENTRYPOINT ["./scripts/entrypoint.sh"]
