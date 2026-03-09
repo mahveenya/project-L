@@ -1,4 +1,3 @@
-from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.ext.asyncio import (
     create_async_engine,
     async_sessionmaker,
@@ -15,5 +14,9 @@ AsyncSessionLocal = async_sessionmaker(
 )
 
 
-class Base(DeclarativeBase):
-    pass
+async def get_session():
+    session = AsyncSessionLocal()
+    try:
+        yield session
+    finally:
+        await session.close()
